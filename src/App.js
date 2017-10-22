@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import fire from './fire';
 
@@ -45,20 +46,24 @@ class App extends Component {
 
   render() {
     return (
-      <form onSubmit={this.addMessage.bind(this)}>
-        <input type="text" ref={el => (this.inputEl = el)} />
-        <input type="submit" />
-        <ul>
-          {/* Render the list of messages */
-          this.state.messages.map(url => (
-            <li id={url.id}>
-              <img src={url.toString()} alt="" />
-            </li>
-          ))}
-        </ul>
-      </form>
+      <div>
+        <Link to="/admin">
+          <button>Go to admin</button>
+        </Link>
+        <form onSubmit={this.addMessage.bind(this)}>
+          <input type="text" ref={el => (this.inputEl = el)} />
+          <input type="submit" />
+          <ul>
+            {/* Render the list of messages */
+            this.state.messages.map(url => (
+              <li id={url.id}>
+                <img src={url.toString()} alt="" />
+              </li>
+            ))}
+          </ul>
+        </form>
+      </div>
     );
   }
 }
-
 export default App;
