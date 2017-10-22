@@ -15,10 +15,24 @@ class App extends Component {
       .limitToLast(100);
     messagesRef.on('child_added', (snapshot) => {
       /* Update React state when message is added at Firebase Database */
-      const message = { text: snapshot.val(), id: snapshot.key };
-      this.setState({ messages: [message].concat(this.state.messages) });
+      const message = snapshot.val();
+
+      fire
+        .storage()
+        .ref()
+        .child(`${message.toString()}.jpg`)
+        .getDownloadURL()
+        .then((url) => {
+          this.setState({ messages: this.state.messages.concat([url]) });
+
+          console.log(url);
+        })
+        .catch((error) => {
+          // Handle any errors
+        });
     });
   }
+
   addMessage(e) {
     e.preventDefault(); // <- prevent form submit from reloading the page
     /* Send the message to Firebase */
@@ -28,6 +42,7 @@ class App extends Component {
       .push(this.inputEl.value);
     this.inputEl.value = ''; // <- clear the input
   }
+
   render() {
     return (
       <form onSubmit={this.addMessage.bind(this)}>
@@ -35,7 +50,11 @@ class App extends Component {
         <input type="submit" />
         <ul>
           {/* Render the list of messages */
-          this.state.messages.map(message => <li key={message.id}>{message.text}</li>)}
+          this.state.messages.map(url => (
+            <li id={url.id}>
+              <img src={url.toString()} alt="" />
+            </li>
+          ))}
         </ul>
       </form>
     );
